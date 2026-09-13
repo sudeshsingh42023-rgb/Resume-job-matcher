@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      REDIS_HOST: redis
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/matcher
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY}
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+
+  postgres:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_DB: matcher
+      POSTGRES_USER: matcher
+      POSTGRES_PASSWORD: matcher
+    ports:
+      - "5433:5432"
